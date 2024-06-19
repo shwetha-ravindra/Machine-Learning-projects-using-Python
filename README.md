@@ -1,6 +1,6 @@
-Here’s a detailed breakdown of the approach and some insights:
+# Here’s a detailed breakdown of the approach and some insights:
 
-1. Data Understanding and Preparation
+# 1. Data Understanding and Preparation
 
 Dataset Overview:
 - step: Time step of the transaction.
@@ -15,7 +15,7 @@ Dataset Overview:
 - isFraud: Indicator if the transaction is fraudulent (1) or not (0).
 - isFlaggedFraud: Indicator if the transaction was flagged as potentially fraudulent (1) or not (0).
 
-2. Data Cleaning and Feature Engineering
+# 2. Data Cleaning and Feature Engineering
 
 - Handle Missing Values: Ensuring there are no missing values in key columns.
 - Encode Categorical Variables: Convert ‘type’ into numerical values using one-hot encoding.
@@ -24,24 +24,24 @@ Dataset Overview:
   - `balanceDeltaDest` = `oldbalanceDest` - `newbalanceDest`
 - Remove Identifiers: Drop columns like ‘nameOrig’ and ‘nameDest’ as they are identifiers and not features.
 
-3. Exploratory Data Analysis (EDA)
+# 3. Exploratory Data Analysis (EDA)
 
 - Distribution Analysis: Examine the distribution of transaction types and amounts.
 - Correlation Analysis: Check correlations between features and the target variable (`isFraud`).
 - Fraud Patterns: Investigate patterns in fraudulent transactions (e.g., transaction types that are more prone to fraud).
 
-4. Building the Decision Tree Model
+# 4. Building the Decision Tree Model
 
 - Data Splitting: Split the data into training and testing sets.
 - Model Training: Train a decision tree classifier on the training set.
 - Hyperparameter Tuning: Use techniques like grid search to optimize the decision tree parameters (e.g., max depth, min samples split).
 
-5. Model Evaluation
+# 5. Model Evaluation
 
 - Performance Metrics: Evaluate the model using accuracy, precision, recall, F1-score, and ROC-AUC score.
 - Confusion Matrix: Analyze the confusion matrix to understand the model's performance on detecting fraud.
 
-6. Insights and Actionable Recommendations
+# 6. Insights and Actionable Recommendations
 
 1. Fraudulent Transaction Types: Transfers and cash-out transactions have higher fraud rates compared to payments.
    - Action: Implement stricter monitoring and additional authentication for these transaction types.
@@ -55,42 +55,42 @@ Dataset Overview:
 4. Transaction Amounts: Higher transaction amounts could be more susceptible to fraud.
    - Action: Increase scrutiny for transactions above a certain threshold amount.
 
-Python Code Outline:
+# Python Code Outline:
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
 
-# Load data
+## Load data
 data = pd.read_csv('transactions.csv')
 
-# Feature Engineering
+## Feature Engineering
 data['balanceDeltaOrig'] = data['oldbalanceOrg'] - data['newbalanceOrig']
 data['balanceDeltaDest'] = data['oldbalanceDest'] - data['newbalanceDest']
 
-# One-hot encoding for 'type'
+## One-hot encoding for 'type'
 data = pd.get_dummies(data, columns=['type'])
 
-# Define features and target
+## Define features and target
 features = data.drop(['nameOrig', 'nameDest', 'isFraud', 'isFlaggedFraud'], axis=1)
 target = data['isFraud']
 
-# Split data
+## Split data
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.3, random_state=42)
 
-# Train Decision Tree
+## Train Decision Tree
 clf = DecisionTreeClassifier(random_state=42)
 clf.fit(X_train, y_train)
 
-# Predictions
+## Predictions
 y_pred = clf.predict(X_test)
 
-# Evaluation
+## Evaluation
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 print('ROC-AUC Score:', roc_auc_score(y_test, y_pred))
 
-Conclusion
+# Conclusion
 
 By following this approach, a robust fraud detection model can be developed using decision tree classification. The key insights derived from data analysis can help in fine-tuning the model and implementing effective fraud detection mechanisms in the system.
